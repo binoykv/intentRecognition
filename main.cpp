@@ -43,7 +43,45 @@ private:
 		}
 		return result;
 	}
-public:
+	bool formatCmd(string inputCmd, string &formattedOutput)
+	{
+		/*
+		* For formatting the command
+		*/
+		if(inputCmd.empty())
+			return false;
+		for(int i=0;i<inputCmd.length()-1;i++)
+		{
+			if(i==0)
+			{
+				// Removing space at beginning of inputCmd
+				if(inputCmd[i]==' ')
+				{
+					inputCmd.erase(i,1);
+					i--;
+				}
+			}
+			else
+			{
+				if((inputCmd[i]==' ') && (inputCmd[i+1]==' '))
+				{
+					// Removing extra space between characters
+					inputCmd.erase(i+1,1);
+					i--;
+				}
+
+				if(inputCmd[inputCmd.length()-1] == ' ')
+				{
+					// Removing  spaces at end of string
+					inputCmd.erase(inputCmd.length()-1,1);
+					i--;
+				}
+			}
+
+		}
+		formattedOutput = inputCmd;
+		return true;
+	}
 	string toUpperCase(string s)
 	{
 		string result;
@@ -53,6 +91,7 @@ public:
 		result = s;
 		return result;
 	}
+public:
 	bool start()
 	{
 		return true;
@@ -60,41 +99,53 @@ public:
 	string processCommand(string cmd)
 	{
 		string result;
-		string cmdFormatted = toUpperCase(cmd);
-		if (regex_match (cmdFormatted, regex("(GET)(.*)") ))
+		string upperCaseConverted = toUpperCase(cmd);
+		string cmdFormatted;
+		if(formatCmd(upperCaseConverted,cmdFormatted))
 		{
+			if (regex_match (cmdFormatted, regex("(GET)(.*)") ))
+			{
 
-			if (regex_match (cmdFormatted, regex("(GET WEATHER)") ))
-			{
-				// Get Weather command recognized
-				result = getIntentValue("GET WEATHER");
-			}
-			else if (regex_match (cmdFormatted, regex("(GET WEATHER )(.*)") ))
-			{
-				// Get Weather <City> command recognized
-				string intentRequired = getIntentValue("GET WEATHER CITY");
-				vector<string> splittedCmd = split(cmd);
-				string cityName;
-				for(int unsigned i = 0; i<splittedCmd.size();i++)
+				if (regex_match (cmdFormatted, regex("(GET WEATHER)") ))
 				{
-					if(!(splittedCmd[i].empty()) && (toUpperCase(splittedCmd[i]) !="GET" ) && (toUpperCase(splittedCmd[i]) !="WEATHER"))
-					{
-						cityName.append(splittedCmd[i]);
-						cityName.append(" ");
-					}
+					// Get Weather command recognized
+					result = getIntentValue("GET WEATHER");
 				}
-				cityName.erase(cityName.length()-1,1);
-				// Now replace the city name in the intent
-				result = regex_replace(intentRequired,regex("#CITY"),cityName);
+				else if (regex_match (cmdFormatted, regex("(GET WEATHER )(.*)") ))
+				{
+					// Get Weather <City> command recognized
+					string intentRequired = getIntentValue("GET WEATHER CITY");
+					vector<string> splittedCmd = split(cmd);
+					string cityName;
+					for(int unsigned i = 0; i<splittedCmd.size();i++)
+					{
+						if(!(splittedCmd[i].empty()) && (toUpperCase(splittedCmd[i]) !="GET" ) && (toUpperCase(splittedCmd[i]) !="WEATHER"))
+						{
+							cityName.append(splittedCmd[i]);
+							cityName.append(" ");
+						}
+					}
+					cityName.erase(cityName.length()-1,1);
+					// Now replace the city name in the intent
+					result = regex_replace(intentRequired,regex("#CITY"),cityName);
+				}
+				else if (regex_match (cmdFormatted, regex("(GET FACT)") ))
+				{
+					result = getIntentValue("GET FACT");
+				}
+				else
+				{
+					result = getIntentValue("UNKNOWN");
+				}
 			}
 			else
 			{
+				// can implement other intent which doesn't begin with GET
 				result = getIntentValue("UNKNOWN");
 			}
 		}
 		else
 		{
-			// can implement other intent which doesn't begin with GET
 			result = getIntentValue("UNKNOWN");
 		}
 		return result;
@@ -108,12 +159,19 @@ public:
 };
 int main()
 {
-  std::cout<<"##### This is a command line tool for intent recognition #####"<<std::endl;
+  std::cout<<"##### This is a command line tool for intent recognition #####"<<std::endl<<std::endl;
   
   IntentRecognition obj;
   cout<<obj.processCommand("GET WEATHER Paris")<<endl;
   cout<<obj.processCommand("GET WEATHER Darmstadt City")<<endl;
   cout<<obj.processCommand("GET WEATHER")<<endl;
-  cout<<obj.processCommand("GET WEA")<<endl;
+  cout<<obj.processCommand("get weather kochi")<<endl;
+  cout<<obj.processCommand(" Get weather ")<<endl;
+  cout<<obj.processCommand(" Get  weather  Berlin ")<<endl;
+  cout<<obj.processCommand(" gEt   WeAtHer")<<endl;
+  cout<<obj.processCommand("Gt weather Berlin")<<endl;
+  cout<<obj.processCommand("Get Fact")<<endl;
+  cout<<obj.processCommand(" get fact")<<endl;
+  cout<<obj.processCommand("get fact 1")<<endl;
   return 1;
 }
