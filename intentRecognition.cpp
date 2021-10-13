@@ -1,3 +1,6 @@
+/*
+* intentRecognition.cpp class implementation
+*/
 #include <iostream>
 #include <algorithm>
 #include <regex>

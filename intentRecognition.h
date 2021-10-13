@@ -1,3 +1,7 @@
+/*
+* intentRecognition.h class declaration
+*/
+
 #ifndef INTENTRECOGNITION_H_
 #define INTENTRECOGNITION_H_
 

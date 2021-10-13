@@ -1,3 +1,6 @@
+/*
+* googleTest.cpp --> Google Test case definitions for intentRecognition class implementation
+*/
 #include <src/gtest-all.cc>
 #include <gtest/gtest.h>
 #include "intentRecognition.h"
