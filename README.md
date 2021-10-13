@@ -13,17 +13,29 @@ This is a simple command line intent recognition tool. This also includes a goog
 
 ## Application sample output
   $./application
+  
  '##### This is a command line tool for intent recognition #####
+ 
  (Enter Close/Exit to stop the program)
+ 
 '> Get Weather
+
 What is the weather like today?
+
 '> Get Weather Berlin
+
 What is the weather like in Berlin today?
+
 '> Get Fact
+
 Tell me an interesting fact.
+
 '> Get Something
+
 Unknown command
+
 '>Close
+
 Program exited!!
 
 > The program can handle different semantic variations for various commands
