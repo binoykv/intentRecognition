@@ -2,7 +2,14 @@ cmake_minimum_required(VERSION 3.5)
 project (Intent_Recongition)
 set(CMAKE_CXX_STANDARD 14)
 
+ADD_SUBDIRECTORY (googletest)
+enable_testing()
+include_directories(googletest/include googletest)
 set(HEADER_FILES intentRecognition.h)
 set(SOURCES intentRecognition.cpp main.cpp)
-
+set(SOURCES2 intentRecognition.cpp googleTests.cpp)
 add_executable(application ${SOURCES} ${HEADER_FILES})
+add_executable(googleTest ${SOURCES2} ${HEADER_FILES})
+
+target_link_libraries(googleTest gtest_main)
+add_test(googleTest googleTest)
